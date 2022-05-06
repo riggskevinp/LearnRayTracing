@@ -56,10 +56,14 @@ private:
 
 using point3 = vec3;
 using color = vec3;
-// or
-//using point3 = Eigen::Vector3d;
-//using color = Eigen::Vector3d;
+using vector3 = vec3;
 
+// or
+/*
+using point3 = Eigen::Vector3d;
+using color = Eigen::Vector3d;
+using vector3 = Eigen::Vector3d;
+*/
 
 // Utilities
 inline std::ostream& operator<<(std::ostream &out, const vec3 &v) {

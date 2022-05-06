@@ -16,6 +16,7 @@ add_executable(RayTracingCli
         main.cpp
         vec3.h
         color.h
+        ray.h
 )
 
 
@@ -37,6 +38,7 @@ if(BUILD_TESTING)
             test/test.cpp
             vec3.h
             color.h
+            ray.h
     )
     target_link_libraries(ray_test
         gtest_main

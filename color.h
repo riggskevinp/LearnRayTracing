@@ -9,8 +9,8 @@
 
 #include <iostream>
 
-template<typename vec_type>
-inline void write_color(std::ostream &out, vec_type pixel_color) {
+
+inline void write_color(std::ostream &out, color pixel_color) {
     // Write the translated [0, 255] value of each color component
     out << static_cast<int>(255.999 * pixel_color.x()) << " "
     << static_cast<int>(255.999 * pixel_color.y()) << " "

@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "../vec3.h"
+#include "../ray.h"
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {
@@ -61,6 +62,14 @@ TEST(Vector3, Utilities){
     EXPECT_LE(0.000001, abs(unitv.y() - 0.6666));
     std::cout << unitv << std::endl;
 
+}
+
+TEST(RAY, Happy_Path){
+    auto pt = point3(1.0, 2.0, 3.0);
+    auto dir = vector3(0.0, 0.0, 1.0);
+    auto r = ray(pt, dir);
+
+    EXPECT_EQ(4.0, r.at(1).z());
 }
 
 
