@@ -4,6 +4,7 @@
 #include "color.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "camera.h"
 
 
 constexpr color ray_color(const ray& r, const hittable& world){
@@ -20,27 +21,7 @@ struct Image {
     static constexpr auto const aspect_ratio = 16.0 / 9.0;
     static constexpr auto const width = 400;
     static constexpr auto const height = static_cast<int>(width / aspect_ratio);
-};
-
-struct Camera {
-    constexpr explicit Camera(const Image& img):
-    viewport_height(2.0),
-    viewport_width(img.aspect_ratio * viewport_height),
-    focal_length(1.0),
-    origin(0, 0, 0),
-    horizontal(viewport_width, 0, 0),
-    vertical(0, viewport_height, 0),
-    lower_left_corner(origin - horizontal/2 - vertical/2 - vector3(0, 0, focal_length))
-    {
-    }
-    const double viewport_height;
-    const double viewport_width;
-    const double focal_length;
-
-    const point3 origin;
-    const vector3 horizontal;
-    const vector3 vertical;
-    const point3 lower_left_corner;
+    static constexpr auto const samples_per_pixel = 100;
 };
 
 void render_helloworld(){
@@ -57,7 +38,7 @@ void render_helloworld(){
     world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
 
     // Camera
-    const Camera cam = Camera(img);
+    Camera cam;
 
     // Render
     std::cout << "P3\n" << img.width << " " << img.height << "\n255" << std::endl;
@@ -65,11 +46,14 @@ void render_helloworld(){
     for(int j = img.height - 1; j >= 0; --j){
         std::cerr << "\rScanLines remaining: " << j << " " << std::flush;
         for(int i = 0; i < img.width; ++i){
-            auto u = double(i) / (img.width-1);
-            auto v = double(j) / (img.height-1);
-            ray r(cam.origin, cam.lower_left_corner + u*cam.horizontal + v*cam.vertical - cam.origin);
-            color pixel_color = ray_color(r, world);
-            write_color(std::cout, pixel_color);
+            color pixel_color(0,0,0);
+            for(int s = 0; s < img.samples_per_pixel; ++s){
+                auto u = (i + random_double()) / (img.width-1);
+                auto v = (j + random_double()) / (img.height-1);
+                ray r = cam.get_ray(u, v);
+                pixel_color += ray_color(r, world);
+            }
+            write_color(std::cout, pixel_color, img.samples_per_pixel);
         }
     }
     std::cerr << "\nDone." << std::endl;

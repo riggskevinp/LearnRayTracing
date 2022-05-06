@@ -28,6 +28,7 @@ set(CPP_SOURCES
         sphere.h
         hittable_list.h
         rtweekend.h
+        camera.h
 )
 
 add_executable(RayTracingCli

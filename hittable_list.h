@@ -1,30 +1,31 @@
 //
-// Created by kr63454 on 5/6/2022.
+// Created on 5/6/2022.
 //
 
 #ifndef RAYTRACING_HITTABLE_LIST_H
 #define RAYTRACING_HITTABLE_LIST_H
 
 #include <memory>
+#include <utility>
 #include <vector>
 
 #include "hittable.h"
 
 class hittable_list : public hittable {
 public:
-    hittable_list() {}
-    explicit hittable_list(shared_ptr<hittable> object) { add(object);}
+    hittable_list() = default;
+    explicit hittable_list(const shared_ptr<hittable>& object) { add(object);}
 
-    void clear() {objects.clear();}
-    void add(shared_ptr<hittable> object) {objects.push_back(object);}
+    constexpr void clear() {objects.clear();}
+    constexpr void add(const shared_ptr<hittable>& object) {objects.push_back(object);}
 
-    constexpr bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
+    bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
 
 private:
     std::vector<shared_ptr<hittable>> objects;
 };
 
-constexpr bool hittable_list::hit(const ray &r, double t_min, double t_max, hit_record &rec) const
+bool hittable_list::hit(const ray &r, double t_min, double t_max, hit_record &rec) const
 {
     hit_record temp_rec;
     bool hit_anything = false;

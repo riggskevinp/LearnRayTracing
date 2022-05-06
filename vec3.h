@@ -1,5 +1,5 @@
 //
-// Created by kr63454 on 5/6/2022.
+// Created on 5/6/2022.
 //
 
 #ifndef RAYTRACING_VEC3_H
@@ -17,11 +17,11 @@ public:
     constexpr vec3(): e{0,0,0} {}
     constexpr vec3(double e0, double e1, double e2): e{e0,e1,e2} {}
 
-    constexpr double x() const {return e[0];}
-    constexpr double y() const {return e[1];}
-    constexpr double z() const {return e[2];}
+    [[nodiscard]] constexpr double x() const {return e[0];}
+    [[nodiscard]] constexpr double y() const {return e[1];}
+    [[nodiscard]] constexpr double z() const {return e[2];}
 
-    vec3 operator-() const {return vec3(-e[0], -e[1], -e[2]);}
+    vec3 operator-() const {return {-e[0], -e[1], -e[2]};}
     constexpr double operator[](int i) const {return e[i];}
     constexpr double& operator[](int i) {return e[i];}
 
@@ -43,12 +43,12 @@ public:
         return *this *= 1/t;
     }
 
-    constexpr double length() const {
+    [[nodiscard]] constexpr double length() const {
         //return std::sqrt(length_squared());
         return sqrt_helper::sqrt(length_squared());
     }
 
-    constexpr double length_squared() const {
+    [[nodiscard]] constexpr double length_squared() const {
         return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
     }
 
@@ -74,23 +74,23 @@ inline std::ostream& operator<<(std::ostream &out, const vec3 &v) {
 }
 
 constexpr vec3 operator+(const vec3 &u, const vec3 &v){
-    return vec3(u.x() + v.x(), u.y() + v.y(), u.z() + v.z());
+    return {u.x() + v.x(), u.y() + v.y(), u.z() + v.z()};
 }
 
 constexpr vec3 operator-(const vec3 &u, const vec3 &v){
-    return vec3(u.x() - v.x(), u.y() - v.y(), u.z() - v.z());
+    return {u.x() - v.x(), u.y() - v.y(), u.z() - v.z()};
 }
 
 constexpr vec3 operator*(const vec3 &u, const vec3 &v){
-    return vec3(u.x() * v.x(), u.y() * v.y(), u.z() * v.z());
+    return {u.x() * v.x(), u.y() * v.y(), u.z() * v.z()};
 }
 
 constexpr vec3 operator*(double t, const vec3 &v){
-    return vec3(t * v.x(), t * v.y(), t * v.z());
+    return {t * v.x(), t * v.y(), t * v.z()};
 }
 
 constexpr vec3 operator*(const vec3 &u, double t){
-    return vec3(u.x() * t, u.y() * t, u.z() * t);
+    return {u.x() * t, u.y() * t, u.z() * t};
 }
 
 constexpr vec3 operator/(const vec3 &u, double t){
@@ -104,9 +104,9 @@ constexpr double dot(const vec3 &u, const vec3 &v){
 }
 
 constexpr vec3 cross(const vec3 &u, const vec3 &v){
-    return vec3(u.y() * v.z() - u.z() * v.y(),
+    return {u.y() * v.z() - u.z() * v.y(),
                 u.z() * v.x() - u.x() * v.z(),
-                u.x() * v.y() - u.y() * v.x());
+                u.x() * v.y() - u.y() * v.x()};
 }
 
 constexpr vec3 unit_vector(vec3 v){

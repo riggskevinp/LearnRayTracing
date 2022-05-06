@@ -1,5 +1,5 @@
 //
-// Created by kr63454 on 5/6/2022.
+// Created on 5/6/2022.
 //
 
 #ifndef RAYTRACING_SPHERE_H
@@ -10,14 +10,14 @@
 
 class sphere: public hittable {
 public:
-    constexpr sphere() {}
+    constexpr sphere() = default;
     constexpr sphere(point3 cen, double r): center(cen), radius(r) {};
 
     constexpr bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
 
 private:
     point3 center;
-    double radius;
+    double radius{};
 };
 
 constexpr bool sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) const {

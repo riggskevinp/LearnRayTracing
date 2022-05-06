@@ -1,5 +1,5 @@
 //
-// Created by kr63454 on 5/6/2022.
+// Created on 5/6/2022.
 //
 
 #ifndef RAYTRACING_HITTABLE_H
