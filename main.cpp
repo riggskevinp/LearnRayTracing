@@ -1,22 +1,15 @@
 #include <iostream>
 
+#include "rtweekend.h"
 #include "color.h"
-#include "vec3.h"
-#include "ray.h"
+#include "hittable_list.h"
+#include "sphere.h"
 
 
-constexpr bool hit_sphere(const point3& center, double radius, const ray& r){
-    vector3 oc = r.origin() - center;
-    auto a = dot(r.direction(), r.direction());
-    auto b = 2.0 * dot(oc, r.direction());
-    auto c = dot(oc, oc) - radius*radius;
-    auto discriminant = b*b - 4*a*c;
-    return (discriminant > 0);
-}
-
-constexpr color ray_color(const ray& r){
-    if(hit_sphere(point3(0,0,-1), 0.5, r)){
-        return color(1,0,0);
+constexpr color ray_color(const ray& r, const hittable& world){
+    hit_record rec;
+    if(world.hit(r, 0, infinity, rec)){
+        return 0.5 * (rec.normal + color(1,1,1));
     }
     vector3 unit_direction = unit_vector(r.direction());
     auto t = 0.5*(unit_direction.y() + 1.0);
@@ -30,7 +23,7 @@ struct Image {
 };
 
 struct Camera {
-    constexpr Camera(const Image& img):
+    constexpr explicit Camera(const Image& img):
     viewport_height(2.0),
     viewport_width(img.aspect_ratio * viewport_height),
     focal_length(1.0),
@@ -57,9 +50,11 @@ void render_helloworld(){
      */
     // Image
     const Image img;
-    //const auto aspect_ratio = 16.0 / 9.0;
-    //const int image_width = 400;
-    //const int image_height = static_cast<int>(image_width / aspect_ratio);
+
+    // World
+    hittable_list world;
+    world.add(make_shared<sphere>(point3(0,0,-1), 0.5));
+    world.add(make_shared<sphere>(point3(0,-100.5,-1), 100));
 
     // Camera
     const Camera cam = Camera(img);
@@ -73,7 +68,7 @@ void render_helloworld(){
             auto u = double(i) / (img.width-1);
             auto v = double(j) / (img.height-1);
             ray r(cam.origin, cam.lower_left_corner + u*cam.horizontal + v*cam.vertical - cam.origin);
-            color pixel_color = ray_color(r);
+            color pixel_color = ray_color(r, world);
             write_color(std::cout, pixel_color);
         }
     }
@@ -81,6 +76,9 @@ void render_helloworld(){
 }
 
 int main(int argc, char **argv){
+    // silence unused warnings
+    (void)argc;
+    (void)argv;
     // Can swap between using custom color type
     // or Vector3d from Eigen library inside vec3.h
     render_helloworld();
