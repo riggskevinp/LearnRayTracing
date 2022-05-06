@@ -17,6 +17,7 @@ add_executable(RayTracingCli
         vec3.h
         color.h
         ray.h
+        sqrt_help.h
 )
 
 
@@ -39,6 +40,7 @@ if(BUILD_TESTING)
             vec3.h
             color.h
             ray.h
+            sqrt_help.h
     )
     target_link_libraries(ray_test
         gtest_main

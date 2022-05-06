@@ -10,6 +10,8 @@
 
 #include <Eigen/Dense>
 
+#include "sqrt_help.h"
+
 class vec3 {
 public:
     constexpr vec3(): e{0,0,0} {}
@@ -41,8 +43,9 @@ public:
         return *this *= 1/t;
     }
 
-    double length() const {
-        return std::sqrt(length_squared());
+    constexpr double length() const {
+        //return std::sqrt(length_squared());
+        return sqrt_helper::sqrt(length_squared());
     }
 
     constexpr double length_squared() const {
@@ -106,7 +109,7 @@ constexpr vec3 cross(const vec3 &u, const vec3 &v){
                 u.x() * v.y() - u.y() * v.x());
 }
 
-inline vec3 unit_vector(vec3 v){
+constexpr vec3 unit_vector(vec3 v){
     return v / v.length();
 }
 
