@@ -10,15 +10,15 @@
 
 class ray {
 public:
-    ray() {}
-    ray(const point3& origin, const vector3& direction)
+    constexpr ray() {}
+    constexpr ray(const point3& origin, const vector3& direction)
     : orig(origin), dir(direction)
     {}
 
-    point3 origin() const {return orig;}
-    vector3 direction() const {return dir;}
+    constexpr point3 origin() const {return orig;}
+    constexpr vector3 direction() const {return dir;}
 
-    point3 at(double t) const {
+    constexpr point3 at(double t) const {
         return orig + t*dir;
     }
 

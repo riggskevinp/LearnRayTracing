@@ -58,7 +58,7 @@ using point3 = vec3;
 using color = vec3;
 using vector3 = vec3;
 
-// or
+// eigen not constexpr
 /*
 using point3 = Eigen::Vector3d;
 using color = Eigen::Vector3d;
