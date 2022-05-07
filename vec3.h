@@ -71,6 +71,8 @@ private:
 
 };
 
+
+
 using point3 = vec3;
 using color = vec3;
 using vector3 = vec3;
@@ -83,46 +85,58 @@ using vector3 = Eigen::Vector3d;
 */
 
 // Utilities
-inline std::ostream& operator<<(std::ostream &out, const vec3 &v) {
+inline std::ostream& operator<<(std::ostream &out, const vector3 &v) {
     return out << v.x() << ' ' << v.y() << ' ' << v.z();
 }
 
-constexpr vec3 operator+(const vec3 &u, const vec3 &v){
+constexpr vector3 operator+(const vector3 &u, const vector3 &v){
     return {u.x() + v.x(), u.y() + v.y(), u.z() + v.z()};
 }
 
-constexpr vec3 operator-(const vec3 &u, const vec3 &v){
+constexpr vector3 operator-(const vector3 &u, const vector3 &v){
     return {u.x() - v.x(), u.y() - v.y(), u.z() - v.z()};
 }
 
-constexpr vec3 operator*(const vec3 &u, const vec3 &v){
+constexpr vector3 operator*(const vector3 &u, const vector3 &v){
     return {u.x() * v.x(), u.y() * v.y(), u.z() * v.z()};
 }
 
-constexpr vec3 operator*(double t, const vec3 &v){
+constexpr vector3 operator*(double t, const vector3 &v){
     return {t * v.x(), t * v.y(), t * v.z()};
 }
 
-constexpr vec3 operator*(const vec3 &u, double t){
+constexpr vector3 operator*(const vector3 &u, double t){
     return {u.x() * t, u.y() * t, u.z() * t};
 }
 
-constexpr vec3 operator/(const vec3 &u, double t){
+constexpr vector3 operator/(const vector3 &u, double t){
     return (1/t) * u;
 }
 
-constexpr double dot(const vec3 &u, const vec3 &v){
+constexpr double dot(const vector3 &u, const vector3 &v){
     return u.x() * v.x()
     + u.y() * v.y()
     + u.z() * v.z();
 }
 
-constexpr vec3 cross(const vec3 &u, const vec3 &v){
+constexpr vector3 cross(const vector3 &u, const vector3 &v){
     return {u.y() * v.z() - u.z() * v.y(),
                 u.z() * v.x() - u.x() * v.z(),
                 u.x() * v.y() - u.y() * v.x()};
 }
 
+constexpr vector3 reflect(const vector3& v, const vector3& n){
+    /*
+     * Reflection, ie metals.
+     * equation is v + 2b
+     * surface normal dotted with v gives the length of b
+     * v points in the opposite direction so we need to negate it
+     */
+    return v - 2*dot(v,n)*n;
+}
+
+
+// Unique to vec3
 constexpr vec3 unit_vector(vec3 v){
     return v / v.length();
 }
@@ -150,14 +164,11 @@ vec3 random_in_hemisphere(const vec3& normal){
     }
 }
 
-constexpr vec3 reflect(const vec3& v, const vec3& n){
-    /*
-     * Reflection, ie metals.
-     * equation is v + 2b
-     * surface normal dotted with v gives the length of b
-     * v points in the opposite direction so we need to negate it
-     */
-    return v - 2*dot(v,n)*n;
+vec3 refract(const vec3& uv, const vec3& n, double etai_over_etat){
+    auto cos_theta = fmin(dot(-uv, n), 1.0);
+    vec3 r_out_perp = etai_over_etat * (uv + cos_theta*n);
+    vec3 r_out_parallel = -sqrt_helper::sqrt(fabs(1.0 - r_out_perp.length_squared())) * n;
+    return r_out_perp + r_out_parallel;
 }
 
 #endif //RAYTRACING_VEC3_H
