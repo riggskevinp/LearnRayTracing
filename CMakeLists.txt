@@ -29,6 +29,7 @@ set(CPP_SOURCES
         hittable_list.h
         rtweekend.h
         camera.h
+        material.h
 )
 
 add_executable(RayTracingCli

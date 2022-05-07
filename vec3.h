@@ -60,6 +60,12 @@ public:
         return {random_double(min, max), random_double(min, max), random_double(min,max)};
     }
 
+    [[nodiscard]] bool near_zero() const {
+        // Return true if the vector is close to zero in all dimensions
+        const auto s = 1e-8;
+        return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
+    }
+
 private:
     double e[3];
 
@@ -144,5 +150,14 @@ vec3 random_in_hemisphere(const vec3& normal){
     }
 }
 
+constexpr vec3 reflect(const vec3& v, const vec3& n){
+    /*
+     * Reflection, ie metals.
+     * equation is v + 2b
+     * surface normal dotted with v gives the length of b
+     * v points in the opposite direction so we need to negate it
+     */
+    return v - 2*dot(v,n)*n;
+}
 
 #endif //RAYTRACING_VEC3_H

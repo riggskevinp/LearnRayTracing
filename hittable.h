@@ -7,9 +7,12 @@
 
 #include "ray.h"
 
+class material;
+
 struct  hit_record {
     point3 p;
     vector3 normal;
+    shared_ptr<material> mat_ptr;
     double t{};
     bool front_face{};
 
