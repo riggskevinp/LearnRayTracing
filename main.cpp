@@ -34,6 +34,12 @@ struct Image {
     static constexpr auto const height = static_cast<int>(width / aspect_ratio);
     static constexpr auto const samples_per_pixel = 100;
     static constexpr auto const max_depth = 50;
+    static constexpr auto const look_from = point3{3,3,2};
+    static constexpr auto const look_at = point3{0,0,-1};
+    static constexpr auto const vup = vector3{0,1,0};
+    static constexpr auto const dist_to_focus = (look_from - look_at).length();
+    static constexpr auto const aperture = 2.0;
+    static constexpr auto const vertical_fov = 20.0;
 };
 
 void render_helloworld(){
@@ -61,7 +67,8 @@ void render_helloworld(){
 
 
     // Camera
-    Camera cam(point3(-2,2,1), point3(0,0,-1), vector3(0,1,0), 20, img.aspect_ratio);
+
+    Camera cam(img.look_from, img.look_at, img.vup, img.vertical_fov, img.aspect_ratio, img.aperture, img.dist_to_focus);
 
     // Render
     std::cout << "P3\n" << img.width << " " << img.height << "\n255" << std::endl;
